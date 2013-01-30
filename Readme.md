@@ -4,11 +4,11 @@ Photoshop Scripts for iOS and Android UI designers to generate the device art.
 
 ### How to use ###
 
-#### Dialog, The Easy Way. ####
+##### Dialog, The Easy Way. #####
 
 Run "deviceArtGeneratiorUI.jsx" set the Device, Design and Options, then press the "Generate" button.
 
-#### Separate File ####
+##### Separate File #####
 
 <table>
 <tr><th>Parameter</th><th>Parameter type</th><th>What it does</th></tr>
