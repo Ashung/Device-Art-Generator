@@ -240,10 +240,10 @@ function createDeviceArt(deviceId, designFile, isPortrait, transparentBackground
         if(currentDevice.view == '3d') {
             if(designImageWidth != design3DViewWidth || designImageHeight != design3DVieweight) {
                 var msg = {
-                    en: 'Your design must match %1 width and %2 height. If not, Photoshop can\'t import the design. \rPlease import the design yourself use menu "Layer" - "Smart Objects" - "Repleace Contents...".',
-                    zh: '你的设计稿必须为%1宽和%2高. 否则Ps将不会自动载入会导致错位的. \r请从"图层"-"智能对象"-"替换内容"手动选择合适图片.'
+                    en: 'The dimension of your design must match %1x%2px. If not, Photoshop can\'t import the design. \rPlease import the design yourself use menu "Layer" - "Smart Objects" - "Repleace Contents...".',
+                    zh: '你的设计稿尺寸必须为%1x%2px. 否则PhotoShop将不会自动载入可能导致错位的文件. \r请从菜单"图层"-"智能对象"-"替换内容"手动选择合适图片.'
                 }
-                alert(localize(msg));
+                alert(localize(msg, actualScreenWidth, actualScreenHeight));
                 activeDocument.close(SaveOptions.DONOTSAVECHANGES);
             } else {
                 activeDocument.close(SaveOptions.SAVECHANGES);
