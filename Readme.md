@@ -1,4 +1,4 @@
-﻿# Device Art Generator for Photoshop #
+# Device Art Generator for Photoshop #
 
 Photoshop Scripts for iOS and Android UI designers to generate the device art. 
 
@@ -6,7 +6,7 @@ Photoshop Scripts for iOS and Android UI designers to generate the device art.
 
 ##### Dialog, The Easy Way. #####
 
-Run "deviceArtGeneratiorUI.jsx" set the Device, Design and Options, then press the "Generate" button.
+Run "Scripts/deviceArtGeneratiorUI.jsx" set the Device, Design and Options, then press the "Generate" button.
 
 ##### Separate File #####
 
