@@ -1,16 +1,23 @@
-# Device Art Generator for Photoshop #
+﻿# Device Art Generator for Photoshop #
 
 Photoshop Scripts for iOS and Android UI designers to generate the device art. 
 
 ### How to use ###
 
-<table style="width:100%;" border='1'>
+#### Dialog, The Easy Way. ####
+
+Run "deviceArtGeneratiorUI.jsx" set the Device, Design and Options, then press the "Generate" button.
+
+#### Separate File ####
+
+<table>
 <tr><th>Parameter</th><th>Parameter type</th><th>What it does</th></tr>
 <tr><td><code>createDeviceArt([deviceId]</code></td><td><code>String</code></td><td>Id list in devices array.<br>like: <code>'nexus_4'</code>, <code>'iPhone5_white'</code>.</td></tr>
+<tr><td><code>[, designFile]</code></td><td><code>NULL,Boolean,File</code></td><td>Null and Boolen will open a dialog to choose a file.</td></tr>
 <tr><td><code>[, isPortrait] </code></td><td><code>Boolean </code></td><td>Ture to use portrait mode, (default: true).</td></tr>
 <tr><td><code>[, transparentBackground] </code></td><td><code>Boolean </code></td><td>Background of Psd document, (default: true).</td></tr>
 <tr><td><code>[, hasShadow] </code></td><td><code>Boolean </code></td><td>Shadow of devices, (default: true).</td></tr>
-<tr><td><code>[, hasLight]) </code></td><td><code>Boolean  </code></td><td>glare of device, (default: true).</td></tr>
+<tr><td><code>[, hasForeground]);</code></td><td><code>Boolean  </code></td><td>glare of device, (default: true).</td></tr>
 </table>
 
 Create a new jsx file in "Device_Art_Generator/Scripts" floder. Open and type  the code below:
@@ -19,7 +26,7 @@ Create a new jsx file in "Device_Art_Generator/Scripts" floder. Open and type  t
     #include 'deviceArtGenerator.jsx';
     app.bringToFront();
 
-    createDeviceArt('iPhone5_black', true, false);
+    createDeviceArt('iPhone5_black', true, true, false);
 
 You can change the last line like below: 
 
@@ -27,17 +34,29 @@ You can change the last line like below:
 
 or
 
-    createDeviceArt('iPhone4s_white', true, false); //iPhone 4s white device with white background.
+    createDeviceArt('iPhone4s_white', true, true, false); //iPhone 4s white device with white background.
 
 or
 
-    createDeviceArt('iPhone5_black_3d', true, false); //iPhone 5 black 3D view
+    createDeviceArt('iPhone5_black_3d'); //iPhone 5 3D view with transparent background.
 
+or
+    
+    createDeviceArt('iPhone4s_black', null); //iPhone 4s black device without design.
+
+or
+    
+    createDeviceArt('iPhone5_black', activeDocument.fullName, true, false, true, true); //Use current document as design.
+
+or
+    
+    createDeviceArt('iPhone5_black', File('~/design.psd'), true, false, true, true); //Use a exists document as design.
+    
 Save document, double click the jsx file to run. If has trouble go to Photoshop, run this script form the 'File' -> 'Scripts' -> 'Browse...' menu.
 
 ### Support Devices:
 
-<table style="width:100%;" border='1'>
+<table>
 <tr><th>Device</th><th>ID</th><th>Portrait</th><th>Landscape</th><th>Screen resolution (px)</th></tr>
 <tr><td colspan="5">Android Mobile and Tablet</td></tr>
 <tr><td>Nexus 4</td><td>nexus_4</td><td>Y</td><td>Y</td><td>768x1280</td></tr>
@@ -60,7 +79,8 @@ Save document, double click the jsx file to run. If has trouble go to Photoshop,
 </table>
 
 
-### THANKS
-All Android devices image download form [Device Art Generator](http://developer.android.com/distribute/promote/device-art.html) and [android-ui-utils project](http://android-ui-utils.googlecode.com). 
+### THANKS ###
 
-All iPhone and iPad image download form [Pixeden.com](http://www.pixeden.com) 
+All Android devices image download from [Device Art Generator](http://developer.android.com/distribute/promote/device-art.html) and [android-ui-utils project](http://android-ui-utils.googlecode.com). 
+
+All iPhone and iPad image download from [Pixeden.com](http://www.pixeden.com) 

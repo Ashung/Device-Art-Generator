@@ -1,29 +1,36 @@
 ﻿/*==========================================================
 
 Device Art Generator - Photoshop Script
-Author: Ashung Hung. 
+Author: Ashung Hung
 Mail: ashung.hung@gmail.com
 Dribbble: dribbble.com/ashung
      
 ============================================================
 HOW TO USE
 
-Parameter                       Parameter type  What it does
+Parameter                       Parameter type     What it does
 createDeviceArt
-   ([deviceId]                  String          Id list in devices array. 
-                                                like: 'nexus_4', 'iPhone5_white'.     
-    [, isPortrait]              Boolean         Ture to use portrait mode, (default: true). 
-    [, transparentBackground]   Boolean         Background of Psd document, (default: true). 
-    [, hasShadow]               Boolean         Shadow of devices, (default: true). 
-    [, hasLight])               Boolean         glare of device, (default: true). 
+   ([deviceId]                  String             Id list in devices array. 
+                                                   like: 'nexus_4', 'iPhone5_white'.     
+    [, designFile]              NULL,Boolean,File  Null and Boolen will open a dialog to choose a file.    
+    [, isPortrait]              Boolean            Ture to use portrait mode, (default: true). 
+    [, transparentBackground]   Boolean            Background of Psd document, (default: true). 
+    [, hasShadow]               Boolean            Shadow of devices, (default: true). 
+    [, hasForeground])          Boolean            glare of device, (default: true). 
 
 like: 
     createDeviceArt('nexus_4'); //Google Nexus 4 device with transparent background.
 or
-    createDeviceArt('iPhone4s_white', true, false); //iPhone 4s white device with white background.
+    createDeviceArt('iPhone4s_white', true, true, false); //iPhone 4s white device with white background.
 or
-    createDeviceArt('iPhone5_black_3d', true, false); //iPhone 5 3D view
-    
+    createDeviceArt('iPhone5_black_3d'); //iPhone 5 3D view with transparent background.
+or
+    createDeviceArt('iPhone4s_black', null); //iPhone 4s black device without design.
+or
+    createDeviceArt('iPhone5_black', activeDocument.fullName, true, false, true, true); //Use current document as design.
+or
+    createDeviceArt('iPhone5_black', File('~/design.psd'), true, false, true, true); //Use a exists document as design.
+
 ==========================================================*/
 
 cTID = function(s) { return app.charIDToTypeID(s); };
@@ -39,7 +46,7 @@ var devices = [
 {id: 'xoom',                       title: 'Motorola XOOM',         density: 'MDPI',    landOffset: [218,191],  portOffset: [199,200],  screenSize: [800,1280],  landDoc: [1700,1198], portDoc: [1198,1700]},
 {id: 'galaxy_nexus',               title: 'Galaxy Nexus',          density: 'XHDPI',   landOffset: [371,199],  portOffset: [216,353],  screenSize: [720,1280],  landDoc: [1994,1148], portDoc: [1148,1994]},
 {id: 'nexus_s',                    title: 'Nexus S',               density: 'HDPI',    landOffset: [247,135],  portOffset: [134,247],  screenSize: [480,800],   landDoc: [1308,749],  portDoc: [749,1308]},
-{id: 'htc_one_x',                  title: 'htc One X',             density: 'XHDPI',   landOffset: [346,211],  portOffset: [302,306],  screenSize: [720,1280],  landDoc: [1984,1159], portDoc: [1331,1942]},
+{id: 'htc_one_x',                  title: 'HTC One X',             density: 'XHDPI',   landOffset: [346,211],  portOffset: [302,306],  screenSize: [720,1280],  landDoc: [1984,1159], portDoc: [1331,1942]},
 {id: 'samsung_galaxy_note',        title: 'SAMSUNG Galaxy Note',   density: 'XHDPI',   landOffset: [353,209],  portOffset: [289,312],  screenSize: [800,1280],  landDoc: [1977,1243], portDoc: [1377,1933]},
 {id: 'samsung_galaxy_s3',          title: 'SAMSUNG Galaxy s3',     density: 'XHDPI',   landOffset: [346,211],  portOffset: [302,307],  screenSize: [720,1280],  landDoc: [1984,1159], portDoc: [1331,1942]},
 {id: 'samsung_galaxy_tab_2_7inch', title: 'SAMSUNG Galaxy Tab 2',  density: 'HDPI',    landOffset: [230,203],  portOffset: [274,222],  screenSize: [600,1024],  landDoc: [1490,1026], portDoc: [1147,1495]},
@@ -52,12 +59,12 @@ var devices = [
 {id: 'iPhone5_white', title: 'iPhone 5 White', landOffset: [0,0], portOffset: [198,336], screenSize: [640,1136], landDoc: [0,0], portDoc: [1038,1900]},
 {id: 'iPadMini_black', title: 'iPad Mini Black', landOffset: [0,0], portOffset: [248,181], screenSize: [768,1024], landDoc: [0,0], portDoc: [1264,1600]},
 {id: 'iPadMini_white', title: 'iPad Mini White', landOffset: [0,0], portOffset: [248,181], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1600]},
-{id: 'iPhone5_black_3d', title: 'iPhone5 Black 3D', view: '3d', landOffset: [0,0], portOffset: [0,0], screenSize: [640,1136], landDoc: [2400,2400], portDoc: [2400,2400]},
-{id: 'iPhone5_white_3d', title: 'iPhone5 White 3D', view: '3d', landOffset: [0,0], portOffset: [0,0], screenSize: [640,1136], landDoc: [2400,2400], portDoc: [2400,2400]}
+{id: 'iPhone5_black_3d', title: 'iPhone 5 Black 3D', view: '3d', landOffset: [0,0], portOffset: [0,0], screenSize: [640,1136], landDoc: [2400,2400], portDoc: [2400,2400]},
+{id: 'iPhone5_white_3d', title: 'iPhone 5 White 3D', view: '3d', landOffset: [0,0], portOffset: [0,0], screenSize: [640,1136], landDoc: [2400,2400], portDoc: [2400,2400]}
 
 ];
 
-function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow, hasLight) {
+function createDeviceArt(deviceId, designFile, isPortrait, transparentBackground, hasShadow, hasForeground) {
     var currentDevice, devicePath,
         docName, docWidth, docHeight,
         screenWidth, screenHeight,
@@ -65,11 +72,14 @@ function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow,
         landOffsetX, landOffsetY, portOffsetX, portOffsetY,
         shadowImage, landShadowImage, portShadowImage,
         deviceImage, landDeviceImage, portDeviceImage,
-        lightImage, landLightImage, portLightImage;
-    if(arguments[1]  == undefined) { isPortrait = true; }
-    if(arguments[2]  == undefined) { transparentBackground = true; }
-    if(arguments[3]  == undefined) { hasShadow = true; }
-    if(arguments[4]  == undefined) { hasLight = true; }
+        foregroundImage, landForegroundImage, portForegroundImage;
+    
+    if(arguments[1]  === undefined) { designFile = true; }
+    if(arguments[2]  === undefined) { isPortrait = true; }
+    if(arguments[3]  === undefined) { transparentBackground = true; }
+    if(arguments[4]  === undefined) { hasShadow = true; }
+    if(arguments[5]  === undefined) { hasForeground = true; }
+    
     for(var i = 0; i < devices.length; i ++) {
         if(devices[i].id == deviceId) {
             currentDevice = devices[i];
@@ -92,15 +102,15 @@ function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow,
             portOffsetY = currentDevice.portOffset[1];
             offsetX = isPortrait ? portOffsetX : landOffsetX;
             offsetY = isPortrait ? portOffsetY : landOffsetY;
-            landShadowImage = devicePath + '/land_shadow.png';
-            portShadowImage = devicePath + '/port_shadow.png';
+            landShadowImage = File(devicePath + '/land_shadow.png');
+            portShadowImage = File(devicePath + '/port_shadow.png');
             shadowImage = (isPortrait || currentDevice.view == '3d') ? portShadowImage : landShadowImage;
-            landDeviceImage = devicePath + '/land_back.png';
-            portDeviceImage = devicePath + '/port_back.png';
+            landDeviceImage = File(devicePath + '/land_back.png');
+            portDeviceImage = File(devicePath + '/port_back.png');
             deviceImage = (isPortrait || currentDevice.view == '3d') ? portDeviceImage : landDeviceImage;
-            landLightImage = devicePath + '/land_fore.png';
-            portLightImage = devicePath + '/port_fore.png';
-            lightImage = (isPortrait || currentDevice.view == '3d') ? portLightImage : landLightImage;
+            landForegroundImage = File(devicePath + '/land_fore.png');
+            portForegroundImage = File(devicePath + '/port_fore.png');
+            foregroundImage = (isPortrait || currentDevice.view == '3d') ? portForegroundImage : landForegroundImage;
             break;
         }
     }
@@ -115,14 +125,14 @@ function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow,
     }
 
     // lose image
-    var assetImage = [shadowImage, deviceImage, lightImage];
+    var assetImage = [shadowImage, deviceImage, foregroundImage];
     var loseImage = false;
     var loseImageMsg = {
             en: 'Lose some images.',
             zh: '缺失部分图片.'
         };
     for(var i = 0; i < assetImage.length; i ++) {
-        if(!File(assetImage[i]).exists) {
+        if(!assetImage[i].exists) {
             loseImage = true;
             for(var j in loseImageMsg) {
                 eval('loseImageMsg.' + j + '= loseImageMsg.' + j + '+"\r/"+' + deviceId + '+"/"+' + assetImage[i].name);
@@ -134,11 +144,48 @@ function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow,
         return false;
     }
 
-    var orginInterpolation = null;
-    try {
-        orginInterpolation = app.preferences.interpolation;
-    } catch(e){}
-    
+    // Choose Design Image First
+    if(arguments[1] === undefined || designFile == false || designFile == true) {
+        try {
+            var msg = {
+                en: 'Choose your design file. Image size: %1 x %2 px.',
+                zh: '选择要导入的设计文件. 图像尺寸为: %1 x %2 px.'
+            }
+            designFile = File.openDialog(localize(msg, actualScreenWidth, actualScreenHeight));
+        } catch(e) {}        
+    } else if(designFile !== null) { 
+        if(designFile.exists) {
+            for(var i = 0; i < documents.length; i ++) {
+                if(designFile.absoluteURI == documents[i].fullName.absoluteURI) {
+                    var designImageWidth = documents[i].width.as('px');
+                    var designImageHeight = documents[i].height.as('px');
+                    if((designImageWidth == actualScreenWidth) && (designImageHeight == actualScreenHeight)) {
+                        if(!documents[i].saved) {
+                            if(confirm('Save?')) {
+                                ///documents[i].save();
+                            }
+                        }
+                    } else {
+                        var msg = {
+                            en: 'Dimension Does Not Match. \rThe Design file must be %1x%2px, current document is %3x%4px.',
+                            zh: '尺寸不符. \r设计图片必须为%1x%2px, 当前文件尺寸为%3x%4px.'
+                        }
+                        alert(localize(msg, actualScreenWidth, designImageHeight, designImageWidth, designImageHeight));
+                        return false;
+                    }
+                    break;
+                }
+            }
+        } else {
+            var msg = {
+                en: 'The design file is not exists.',
+                zh: '设计文件不存在.'
+            }
+            alert(localize(msg));
+            return false;
+        }
+    }
+
     // New Document
     if(transparentBackground == true) {
         newDoc(docName, docWidth, docHeight);
@@ -164,34 +211,30 @@ function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow,
         removeBottomLayer();
     }
 
+    var orginInterpolation = null;
+    try {
+        orginInterpolation = app.preferences.interpolation;
+    } catch(e){}
+
     // Screen
     if(currentDevice.view == '3d') {
         activeDocument.artLayers.add();
         convertToSmartObject();
-        smartObjectReplaceContents(devicePath + '/design_3d_view.psb');
-        editSmartObject();
-        var design3DViewWidth = activeDocument.activeLayer.bounds[2].as('px') - activeDocument.activeLayer.bounds[0].as('px');
-        var design3DVieweight = activeDocument.activeLayer.bounds[3].as('px') - activeDocument.activeLayer.bounds[1].as('px');
-        app.preferences.interpolation = ResampleMethod.BICUBICSHARPER;
+        smartObjectReplaceContents(File(devicePath + '/design_3d_view.psb'));
+        if(designFile !== null) {
+            editSmartObject();
+            var design3DViewWidth = activeDocument.activeLayer.bounds[2].as('px') - activeDocument.activeLayer.bounds[0].as('px');
+            var design3DVieweight = activeDocument.activeLayer.bounds[3].as('px') - activeDocument.activeLayer.bounds[1].as('px');
+            app.preferences.interpolation = ResampleMethod.BICUBICSHARPER;
+        }
     } else {
         rect(offsetX, offsetY, screenWidth, screenHeight, '000000', 'screen');
         convertToSmartObject();
     }
-    // Import Design Image
-    try {
-        var msg = {
-            en: 'Choose your design file. Image size: %1 x %2 image.',
-            zh: '选择要导入的设计文件. 图像尺寸为: %1 x %2 px.'
-        }
-        var designImage = File.openDialog(localize(msg, actualScreenWidth, actualScreenHeight));
-        
-        smartObjectReplaceContents(designImage);
-        
-    } catch(e) {
-        alert(e.message);
-    }
 
-    if (designImage != null) {
+    // Import Design File
+    if(designFile !== null) {
+        smartObjectReplaceContents(designFile);
         var designImageWidth = activeDocument.activeLayer.bounds[2].as('px') - activeDocument.activeLayer.bounds[0].as('px');
         var designImageHeight = activeDocument.activeLayer.bounds[3].as('px') - activeDocument.activeLayer.bounds[1].as('px');
         if(currentDevice.view == '3d') {
@@ -237,19 +280,19 @@ function createDeviceArt(deviceId, isPortrait, transparentBackground, hasShadow,
         }
     }
 
-    // Import Light Image
-    if(hasLight) {
+    // Import Foreground Image
+    if(hasForeground) {
         activeDocument.artLayers.add();
         convertToSmartObject();
-        smartObjectReplaceContents(lightImage);
-        activeDocument.activeLayer.name = 'light';
+        smartObjectReplaceContents(foregroundImage);
+        activeDocument.activeLayer.name = 'foreground';
     }
 
     if(orginInterpolation) {
         app.preferences.interpolation = orginInterpolation;
     }
-
 }
+
 
 function newDoc(docName, docWidth, docHeight) {
     preferences.rulerUnits = Units.PIXELS;
@@ -269,15 +312,12 @@ function editSmartObject() {
     executeAction(sTID('placedLayerEditContents'), undefined, DialogModes.NO);
 }
 
-function smartObjectReplaceContents(filePath) {
-    var file = new File(filePath);
-    if(!file.exists) {
-        return false;
-    } else {
+function smartObjectReplaceContents(file) {
+    try {
         var desc1 = new ActionDescriptor();
             desc1.putPath(cTID('null'), file);
         executeAction(sTID('placedLayerReplaceContents'), desc1, DialogModes.NO);
-    }
+    } catch(e) {}
 }
 
 function rect(posX, posY, width, height, fillColor, layerName) {
@@ -333,11 +373,7 @@ function removeBottomLayer() {
 function deselectPath() {
     var desc1 = new ActionDescriptor();
     var ref1 = new ActionReference();
-    ref1.putClass(cTID('Path'));
-    desc1.putReference(cTID('null'), ref1);
+        ref1.putClass(cTID('Path'));
+        desc1.putReference(cTID('null'), ref1);
     executeAction(cTID('Dslc'), desc1, DialogModes.NO);    
 }
-
-// Type the code below, like: createDeviceArt('iPhone4s_white', true, false);
-
-
