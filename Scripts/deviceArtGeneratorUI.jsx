@@ -185,7 +185,7 @@ var designFileArray = [];
 for(var i = 0; i < documents.length; i ++) {
     try {
         if(documents[i].fullName) {
-            docDropDownList.add('item', documents[i].name);
+            docDropDownList.add('item', documents[i].name + ' ('+ documents[i].width.as('px') + 'x' + documents[i].height.as('px') + 'px)');
             designFileArray.push(documents[i].fullName.absoluteURI);
         }
     } catch(e){}
