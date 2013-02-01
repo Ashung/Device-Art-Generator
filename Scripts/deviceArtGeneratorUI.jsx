@@ -154,6 +154,10 @@ var win = new Window(layoutRes);
 // Device DropDownList
 var deviceDropDownList = win.main.device.select;
 var deviceId = devices[0].id;
+var deviceOnlyPortrait = false;
+var deviceOnlyLandscape = false;
+var docOnlyPortrait = false;
+var docOnlyLandscape = false;
 for(var i = 0; i < devices.length; i ++) {
     var actualResolution = devices[i].actualResolution ? (' (' + devices[i].actualResolution[0] + 'x' + devices[i].actualResolution[1] + 'px)') : '';
     var text = devices[i].title + ': ' + devices[i].screenSize[0] + 'x' + devices[i].screenSize[1] + 'px' + actualResolution;
@@ -162,16 +166,33 @@ for(var i = 0; i < devices.length; i ++) {
 deviceDropDownList.onChange = function() {
     deviceId = devices[this.selection.index].id;
     if(devices[this.selection.index].landOffset == '0,0' && devices[this.selection.index].portOffset != '0,0') {
+        deviceOnlyPortrait = true;
+        deviceOnlyLandscape = false;
         win.options.portrait.checkbox.value = true;
         win.options.portrait.checkbox.enabled = false;
     } else if (devices[this.selection.index].landOffset != '0,0' && devices[this.selection.index].portOffset == '0,0') {
+        deviceOnlyPortrait = false;
+        deviceOnlyLandscape = true;
         win.options.portrait.checkbox.value = false;
         win.options.portrait.checkbox.enabled = false;
     } else if(devices[this.selection.index].view == '3d'){
+        deviceOnlyPortrait = true;
+        deviceOnlyLandscape = false;
         win.options.portrait.checkbox.value = true;
         win.options.portrait.checkbox.enabled = false;
     } else {
+        deviceOnlyPortrait = false;
+        deviceOnlyLandscape = false;
         win.options.portrait.checkbox.enabled = true;
+        
+        if(docOnlyPortrait) {
+            win.options.portrait.checkbox.value = true;
+            win.options.portrait.checkbox.enabled = false;
+        }
+        if(docOnlyLandscape) {
+            win.options.portrait.checkbox.value = false;
+            win.options.portrait.checkbox.enabled = false;
+        }
     }
 }
 deviceDropDownList.selection = deviceDropDownList.items[0];
@@ -186,7 +207,7 @@ for(var i = 0; i < documents.length; i ++) {
     try {
         if(documents[i].fullName) {
             docDropDownList.add('item', documents[i].name + ' ('+ documents[i].width.as('px') + 'x' + documents[i].height.as('px') + 'px)');
-            designFileArray.push(documents[i].fullName.absoluteURI);
+            designFileArray.push(documents[i]);
         }
     } catch(e){}
 }
@@ -199,16 +220,52 @@ docDropDownList.onChange = function() {
         designInput.enabled = false;
         designChoose.enabled = false;
         designInput.text = '';
-        designFilePath = designFileArray[this.selection.index];
-    } else if(this.selection.index == designFileArray.length) {
-        designInput.enabled = false;
-        designChoose.enabled = false;
-        designInput.text = '';
-        designFilePath = null;
+        designFilePath = designFileArray[this.selection.index].fullName.absoluteURI;
+
+        var targetDoc = designFileArray[this.selection.index];
+        activeDocument = targetDoc;
+        if(targetDoc.width.as('px') > targetDoc.height.as('px')) {
+            docOnlyPortrait = false;
+            docOnlyLandscape = true;
+            win.options.portrait.checkbox.value = false;
+            win.options.portrait.checkbox.enabled = false;
+        } else {
+            docOnlyPortrait = true;
+            docOnlyLandscape = false;
+            win.options.portrait.checkbox.value = true;
+            win.options.portrait.checkbox.enabled = false;
+        }
+        if(deviceOnlyPortrait) {
+            win.options.portrait.checkbox.value = true;
+            win.options.portrait.checkbox.enabled = false;
+        }
+        if(deviceOnlyLandscape) {
+            win.options.portrait.checkbox.value = false;
+            win.options.portrait.checkbox.enabled = false;
+        }
     } else {
-        designInput.enabled = true;
-        designChoose.enabled = true;
-        designFilePath = designInput.text;
+        if(this.selection.index == designFileArray.length) {
+            designInput.enabled = false;
+            designChoose.enabled = false;
+            designInput.text = '';
+            designFilePath = null;
+        } else {
+            designInput.enabled = true;
+            designChoose.enabled = true;
+            designFilePath = designInput.text;
+        }
+        docOnlyPortrait = false;
+        docOnlyLandscape = false;
+        win.options.portrait.checkbox.value = true;
+        win.options.portrait.checkbox.enabled = true;
+        if(deviceOnlyPortrait) {
+            win.options.portrait.checkbox.value = true;
+            win.options.portrait.checkbox.enabled = false;
+        }
+        if(deviceOnlyLandscape) {
+            win.options.portrait.checkbox.value = false;
+            win.options.portrait.checkbox.enabled = false;
+        }
     }
 }
 designChoose.onClick = function() {

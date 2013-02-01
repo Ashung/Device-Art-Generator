@@ -53,8 +53,8 @@ var devices = [
 
 {id: 'iPad2_black', title: 'iPad 2 Black', landOffset: [0,0], portOffset: [223,373], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1784]},
 {id: 'iPad2_white', title: 'iPad 2 White', landOffset: [0,0], portOffset: [223,373], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1784]},
-{id: 'iPhone4s_black', title: 'iPhone 4s Black', landOffset: [0,0], portOffset: [202,363], screenSize: [640,960], landDoc: [0,0], portDoc: [1044,1904]},
-{id: 'iPhone4s_white', title: 'iPhone 4s White', landOffset: [0,0], portOffset: [202,363], screenSize: [640,960], landDoc: [0,0], portDoc: [1044,1904]},
+{id: 'iPhone4s_black', title: 'iPhone 4s Black', landOffset: [462,295], portOffset: [202,363], screenSize: [640,960], landDoc: [1878,1232], portDoc: [1044,1904]},
+{id: 'iPhone4s_white', title: 'iPhone 4s White', landOffset: [462,295], portOffset: [202,363], screenSize: [640,960], landDoc: [1878,1232], portDoc: [1044,1904]},
 {id: 'iPhone5_black', title: 'iPhone 5 Black', landOffset: [0,0], portOffset: [198,336], screenSize: [640,1136], landDoc: [0,0], portDoc: [1038,1900]},
 {id: 'iPhone5_white', title: 'iPhone 5 White', landOffset: [0,0], portOffset: [198,336], screenSize: [640,1136], landDoc: [0,0], portDoc: [1038,1900]},
 {id: 'iPadMini_black', title: 'iPad Mini Black', landOffset: [0,0], portOffset: [248,181], screenSize: [768,1024], landDoc: [0,0], portDoc: [1264,1600]},
@@ -150,37 +150,43 @@ function createDeviceArt(deviceId, designFile, isPortrait, transparentBackground
             var msg = {
                 en: 'Choose your design file. Image size: %1 x %2 px.',
                 zh: '选择要导入的设计文件. 图像尺寸为: %1 x %2 px.'
-            }
+            };
             designFile = File.openDialog(localize(msg, actualScreenWidth, actualScreenHeight));
         } catch(e) {}        
     } else if(designFile !== null) { 
         if(designFile.exists) {
             for(var i = 0; i < documents.length; i ++) {
-                if(designFile.absoluteURI == documents[i].fullName.absoluteURI) {
-                    var designImageWidth = documents[i].width.as('px');
-                    var designImageHeight = documents[i].height.as('px');
-                    if((designImageWidth == actualScreenWidth) && (designImageHeight == actualScreenHeight)) {
-                        if(!documents[i].saved) {
-                            if(confirm('Save?')) {
-                                ///documents[i].save();
+                try {
+                    if(designFile.absoluteURI == documents[i].fullName.absoluteURI) {
+                        var designImageWidth = documents[i].width.as('px');
+                        var designImageHeight = documents[i].height.as('px');
+                        if((designImageWidth == actualScreenWidth) && (designImageHeight == actualScreenHeight)) {
+                            if(!documents[i].saved) {
+                                var msg = {
+                                    en: 'Do you want to save document first?',
+                                    zh: '是否要先保存文档?'
+                                };
+                                if(confirm(localize(msg))) {
+                                    documents[i].save();
+                                }
                             }
+                        } else {
+                            var msg = {
+                                en: 'Dimension Does Not Match. \rThe Design file must be %1x%2px, current document is %3x%4px.',
+                                zh: '尺寸不符. \r设计图片必须为%1x%2px, 当前文件尺寸为%3x%4px.'
+                            };
+                            alert(localize(msg, actualScreenWidth, designImageHeight, designImageWidth, designImageHeight));
+                            return false;
                         }
-                    } else {
-                        var msg = {
-                            en: 'Dimension Does Not Match. \rThe Design file must be %1x%2px, current document is %3x%4px.',
-                            zh: '尺寸不符. \r设计图片必须为%1x%2px, 当前文件尺寸为%3x%4px.'
-                        }
-                        alert(localize(msg, actualScreenWidth, designImageHeight, designImageWidth, designImageHeight));
-                        return false;
+                        break;
                     }
-                    break;
-                }
+                } catch(e){}
             }
         } else {
             var msg = {
                 en: 'The design file is not exists.',
                 zh: '设计文件不存在.'
-            }
+            };
             alert(localize(msg));
             return false;
         }
@@ -235,6 +241,7 @@ function createDeviceArt(deviceId, designFile, isPortrait, transparentBackground
     // Import Design File
     if(designFile !== null) {
         smartObjectReplaceContents(designFile);
+
         var designImageWidth = activeDocument.activeLayer.bounds[2].as('px') - activeDocument.activeLayer.bounds[0].as('px');
         var designImageHeight = activeDocument.activeLayer.bounds[3].as('px') - activeDocument.activeLayer.bounds[1].as('px');
         if(currentDevice.view == '3d') {
@@ -252,7 +259,23 @@ function createDeviceArt(deviceId, designFile, isPortrait, transparentBackground
             activeDocument.activeLayer.name = 'design';
             // Resize Sesign Layer
             if(designImageWidth != screenWidth || designImageHeight != screenHeight) {
-                if(designImageWidth == actualScreenWidth && designImageHeight == actualScreenHeight) {
+                
+                editSmartObject();
+                var designImageResolution, rellDesignImageWidth, rellDesignImageHeight;
+                if(activeDocument.resolution != 72) {
+                    designImageResolution = activeDocument.resolution;
+                    rellDesignImageWidth = activeDocument.width.as('px');
+                    rellDesignImageHeight = activeDocument.height.as('px');
+                    activeDocument.resizeImage(activeDocument.width, activeDocument.height, 72);
+                    activeDocument.close(SaveOptions.SAVECHANGES);
+                } else {
+                    activeDocument.close(SaveOptions.DONOTSAVECHANGES);
+                }
+                designImageWidth = activeDocument.activeLayer.bounds[2].as('px') - activeDocument.activeLayer.bounds[0].as('px');
+                designImageHeight = activeDocument.activeLayer.bounds[3].as('px') - activeDocument.activeLayer.bounds[1].as('px');
+                
+                if((designImageWidth == actualScreenWidth && designImageHeight == actualScreenHeight) ||
+                    ((designImageResolution != 72) && ((rellDesignImageWidth == screenWidth && rellDesignImageHeight == screenHeight) || (rellDesignImageWidth == actualScreenWidth && rellDesignImageWidth == actualScreenHeight)))) {
                     app.preferences.interpolation = ResampleMethod.BILINEAR;
                     activeDocument.activeLayer.resize(actualScreenWidth * 100 / designImageWidth, actualScreenHeight * 100 / designImageHeight, AnchorPosition.TOPLEFT);
                 } else {
