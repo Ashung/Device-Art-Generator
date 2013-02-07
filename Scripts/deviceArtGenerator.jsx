@@ -51,16 +51,18 @@ var devices = [
 {id: 'samsung_galaxy_s3',          title: 'SAMSUNG Galaxy s3',     density: 'XHDPI',   landOffset: [346,211],  portOffset: [302,307],  screenSize: [720,1280],  landDoc: [1984,1159], portDoc: [1331,1942]},
 {id: 'samsung_galaxy_tab_2_7inch', title: 'SAMSUNG Galaxy Tab 2',  density: 'HDPI',    landOffset: [230,203],  portOffset: [274,222],  screenSize: [600,1024],  landDoc: [1490,1026], portDoc: [1147,1495]},
 
-{id: 'iPad2_black', title: 'iPad 2 Black', landOffset: [0,0], portOffset: [223,373], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1784]},
-{id: 'iPad2_white', title: 'iPad 2 White', landOffset: [0,0], portOffset: [223,373], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1784]},
-{id: 'iPhone4s_black', title: 'iPhone 4s Black', landOffset: [462,295], portOffset: [202,363], screenSize: [640,960], landDoc: [1878,1232], portDoc: [1044,1904]},
-{id: 'iPhone4s_white', title: 'iPhone 4s White', landOffset: [462,295], portOffset: [202,363], screenSize: [640,960], landDoc: [1878,1232], portDoc: [1044,1904]},
-{id: 'iPhone5_black', title: 'iPhone 5 Black', landOffset: [0,0], portOffset: [198,336], screenSize: [640,1136], landDoc: [0,0], portDoc: [1038,1900]},
-{id: 'iPhone5_white', title: 'iPhone 5 White', landOffset: [0,0], portOffset: [198,336], screenSize: [640,1136], landDoc: [0,0], portDoc: [1038,1900]},
-{id: 'iPadMini_black', title: 'iPad Mini Black', landOffset: [0,0], portOffset: [248,181], screenSize: [768,1024], landDoc: [0,0], portDoc: [1264,1600]},
-{id: 'iPadMini_white', title: 'iPad Mini White', landOffset: [0,0], portOffset: [248,181], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1600]},
-{id: 'iPhone5_black_3d', title: 'iPhone 5 Black 3D', view: '3d', landOffset: [0,0], portOffset: [0,0], screenSize: [640,1136], landDoc: [2400,2400], portDoc: [2400,2400]},
-{id: 'iPhone5_white_3d', title: 'iPhone 5 White 3D', view: '3d', landOffset: [0,0], portOffset: [0,0], screenSize: [640,1136], landDoc: [2400,2400], portDoc: [2400,2400]}
+{id: 'iPad2_black', title: 'iPad 2 Black', density: 'NORMAL', landOffset: [0,0], portOffset: [223,373], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1784]},
+{id: 'iPad2_white', title: 'iPad 2 White', density: 'NORMAL', landOffset: [0,0], portOffset: [223,373], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1784]},
+{id: 'iPhone4s_black', title: 'iPhone 4s Black', density: 'RETINA', landOffset: [462,295], portOffset: [202,363], screenSize: [640,960], landDoc: [1878,1232], portDoc: [1044,1904]},
+{id: 'iPhone4s_white', title: 'iPhone 4s White', density: 'RETINA', landOffset: [462,295], portOffset: [202,363], screenSize: [640,960], landDoc: [1878,1232], portDoc: [1044,1904]},
+{id: 'iPhone5_black', title: 'iPhone 5 Black', density: 'RETINA', landOffset: [466,456], portOffset: [198,336], screenSize: [640,1136], landDoc: [2052,1554], portDoc: [1038,1900]},
+{id: 'iPhone5_white', title: 'iPhone 5 White', density: 'RETINA', landOffset: [466,456], portOffset: [198,336], screenSize: [640,1136], landDoc: [2052,1554], portDoc: [1038,1900]},
+{id: 'iPad3_black', title: 'iPad 3 Black', density: 'RETINA', landOffset: [420,496], portOffset: [506,520], screenSize: [1536,2048], landDoc: [2916,2538], portDoc: [2538,3116]},
+{id: 'iPad3_white', title: 'iPad 3 White', density: 'RETINA', landOffset: [420,496], portOffset: [506,520], screenSize: [1536,2048], landDoc: [2916,2538], portDoc: [2538,3116]},
+{id: 'iPadMini_black', title: 'iPad Mini Black', density: 'NORMAL', landOffset: [0,0], portOffset: [248,181], screenSize: [768,1024], landDoc: [0,0], portDoc: [1264,1600]},
+{id: 'iPadMini_white', title: 'iPad Mini White', density: 'NORMAL', landOffset: [0,0], portOffset: [248,181], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1600]},
+{id: 'iPhone5_black_3d', title: 'iPhone 5 Black 3D', density: 'RETINA', view: '3d', landOffset: [0,0], portOffset: [0,0], screenSize: [640,1136], landDoc: [2400,2400], portDoc: [2400,2400]},
+{id: 'iPhone5_white_3d', title: 'iPhone 5 White 3D', density: 'RETINA', view: '3d', landOffset: [0,0], portOffset: [0,0], screenSize: [640,1136], landDoc: [2400,2400], portDoc: [2400,2400]}
 
 ];
 

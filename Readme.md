@@ -72,8 +72,9 @@ Save document, double click the jsx file to run. If has trouble go to Photoshop,
 
 <tr><td colspan="5">iOS Mobile and Tablet</td></tr>
 <tr><td>iPad 2 Black/White</td><td>iPad2_black, iPad2_white</td><td>Y</td><td>-</td><td>768x1024</td></tr>
-<tr><td>iPhone 4s Black/White</td><td>iPhone4s_black, iPhone4s_white</td><td>Y</td><td>-</td><td>640x960</td></tr>
-<tr><td>iPhone 5 Black/White</td><td>iPhone5_black, iPhone5_white</td><td>Y</td><td>-</td><td>640x1136</td></tr>
+<tr><td>iPhone 4s Black/White</td><td>iPhone4s_black, iPhone4s_white</td><td>Y</td><td>Y</td><td>640x960</td></tr>
+<tr><td>iPhone 5 Black/White</td><td>iPhone5_black, iPhone5_white</td><td>Y</td><td>Y</td><td>640x1136</td></tr>
+<tr><td>iPad 3 Black/White</td><td>iPad3_black, iPad3_white</td><td>Y</td><td>Y</td><td>1536x2048</td></tr>
 <tr><td>iPad Mini Black/White</td><td>iPadMini_black, iPadMini_white</td><td>Y</td><td>-</td><td>768x1024</td></tr>
 <tr><td>iPhone 5 3D Black/White</td><td>iPhone5_black_3d, iPhone5_white_3d</td><td>-</td><td>-</td><td>640x1136</td></tr>
 </table>
