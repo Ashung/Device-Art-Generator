@@ -69,6 +69,10 @@ var lang = {
         en: 'Generate',
         zh: '生成'
     },
+    cancelBtnText: {
+        en: 'Cancel',
+        zh: '取消'
+    },
     chooseAnotherFile: {
         en: 'Choose another file...',
         zh: '选择其他文件...'
@@ -144,6 +148,9 @@ var layoutRes =
         alignment: 'right',\
         okBtn: Button {\
             text: '" + localize(lang.okBtnText) + "'\
+        },\
+        cancelBtn: Button {\
+            text: '" + localize(lang.cancelBtnText) + "'\
         }\
     }\
 }";
@@ -326,6 +333,10 @@ win.buttons.okBtn.onClick = function() {
             win.hide();
         }
     }
+}
+
+win.buttons.cancelBtn.onClick = function() {
+    win.hide();
 }
 
 win.show();
