@@ -53,6 +53,8 @@ var devices = [
 
 {id: 'iPad2_black', title: 'iPad 2 Black', density: 'NORMAL', landOffset: [0,0], portOffset: [223,373], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1784]},
 {id: 'iPad2_white', title: 'iPad 2 White', density: 'NORMAL', landOffset: [0,0], portOffset: [223,373], screenSize: [768,1024], landDoc: [0,0], portDoc: [1209,1784]},
+{id: 'iPad2_black_perspective', title: 'iPad 2 Black Perspective', density: 'NORMAL', view: '3d', landOffset: [0,0], portOffset: [0,0], screenSize: [1024,768], landDoc: [1527,1168], portDoc: [1527,1168]},
+{id: 'iPad2_white_perspective', title: 'iPad 2 White Perspective', density: 'NORMAL', view: '3d', landOffset: [0,0], portOffset: [0,0], screenSize: [1024,768], landDoc: [1527,1168], portDoc: [1527,1168]},
 {id: 'iPhone4s_black', title: 'iPhone 4s Black', density: 'RETINA', landOffset: [462,295], portOffset: [202,363], screenSize: [640,960], landDoc: [1878,1232], portDoc: [1044,1904]},
 {id: 'iPhone4s_white', title: 'iPhone 4s White', density: 'RETINA', landOffset: [462,295], portOffset: [202,363], screenSize: [640,960], landDoc: [1878,1232], portDoc: [1044,1904]},
 {id: 'iPhone5_black', title: 'iPhone 5 Black', density: 'RETINA', landOffset: [466,456], portOffset: [198,336], screenSize: [640,1136], landDoc: [2052,1554], portDoc: [1038,1900]},
