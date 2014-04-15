@@ -20,7 +20,7 @@ Run "Scripts/deviceArtGeneratiorUI.jsx" set the Device, Design and Options, then
 <tr><td><code>[, hasForeground]);</code></td><td><code>Boolean  </code></td><td>glare of device, (default: true).</td></tr>
 </table>
 
-Create a new jsx file in "Device_Art_Generator/Scripts" floder. Open and type  the code below:
+Create a new jsx file in "Device_Art_Generator/Scripts" folder. Open and type  the code below:
 
     #target photoshop
     #include 'deviceArtGenerator.jsx';
